@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		html,body{
+			margin:0;
+			padding: 0;
+		}
+		#float-window{
+			width: 50px;
+			height: 50px;
+			background:url(images/1.jpg) no-repeat;
+			background-position: -15px -17px;
+			background-size: 80px 80px;
+			position: absolute;
+			border-radius: 50%;
+		}
+		#content{
+			position: relative;
+			width: 50px;
+			height: 50px;
+			border:2px solid rgba(82, 166, 219, 1);
+			border-radius: 50px;
+			left: 50%;
+			transform: translateX(-50%) translateY(300%);
+
+		}
+		input{
+			font: 12px/1.5 'Microsoft YaHei',arial,sans-serif;
+			position: absolute;
+			height: 60%;
+			width: 55%;
+			left: 25%;
+			top: 20%;
+			border-width: 0;
+			border-bottom: 1px solid rgba(0,0,0,.2);
+			outline: none;
+			text-align: center;
+		}
+		img{
+			width: 40px;
+			position: absolute;
+			right: -5px;
+			top:17px;
+			-webkit-user-select:none;
+		    -moz-user-select:none;
+		    -ms-user-select:none;
+		    user-select:none;
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="content"> 
+		<input id="ipt" type="text" placeholder="百度一下">
+		<div id="float-window">
+		</div>
+		<img src="images/3.png" alt="">
+	</div>
+	
+	<script type="text/javascript">
+	window.onload=function(){
+		var content=document.querySelector("#content");
+		var fw=document.querySelector("#float-window");
+		var img=document.querySelector("img");
+		var disX=0;
+		var disY=0;
+		var i=0;
+		var timer=null;
+		//搜索栏拖拽效果
+		content.onmousedown=function(event){
+			var event=event||window.event;
+			disX=event.clientX-content.offsetLeft;
+			disY=event.clientY-content.offsetTop;
+			document.onmousemove=function(event){
+				var event=event||window.event;
+				content.style.left=event.clientX-disX+'px';
+				content.style.top=event.clientY-disY+'px';
+			}
+			document.onmouseup=function(){
+				document.onmousemove=null;
+				document.onmouseup=null;
+			}
+		}
+		//双击展开、合上搜索框
+		content.ondblclick=function(){
+			clearInterval(timer);
+			if(content.style.width=='200px'){
+				timer=setInterval(function(){
+					content.style.width=50+i+"px"
+					i--;
+					if(content.style.width=="50px")
+						clearInterval(timer);
+				},1);
+				img.style.display="none";
+			}
+			else{
+					timer=setInterval(function(){
+					content.style.width=50+i+"px"
+					i++;
+					if(content.style.width=="200px")
+						clearInterval(timer);
+				},1);
+				img.style.display="block";
+				//展开页面时，回车打开百度搜索页面
+				document.onkeypress=function(event){
+					var event=event||window.event;
+					if(event.keyCode==13){
+						var myUrl="https://www.baidu.com/s?wd="+document.querySelector('#ipt').value;
+						window.open(myUrl);
+					}
+				}
+			}
+		}
+	}
+	
+	</script>
+</body>
+</html>
